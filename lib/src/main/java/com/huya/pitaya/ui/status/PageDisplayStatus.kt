@@ -7,6 +7,10 @@ import androidx.annotation.MainThread
  * 当切换到当前状态时，会触发[showView]，
  * 当切换别的状态时，会触发[hideView]。
  *
+ * @see SimpleStatus
+ * @see ViewStubStatus
+ * @see ReplacementViewStatus
+ *
  * @author YvesCheung
  * 2020/4/17
  */
