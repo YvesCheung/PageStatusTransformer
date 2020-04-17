@@ -135,8 +135,12 @@ class PageStatusTransformer private constructor() {
      *
      * 在Java中使用[JavaViewStatusBuilder]来适配这个DSL
      */
-    open inner class ReplacementViewStatusBuilder internal constructor(val contentView: View) :
-        ViewStatusBuilder() {
+    open inner class ReplacementViewStatusBuilder internal constructor(
+        /**
+         * `replaceTo` 参数指定的 `View`
+         */
+        val contentView: View
+    ) : ViewStatusBuilder() {
 
         private val tagKey get() = R.id.tag_page_status_transformer
 
