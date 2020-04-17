@@ -1,0 +1,3 @@
+rootProject.name='PageStatusTransformer'
+include ':app'
+include ':lib'
