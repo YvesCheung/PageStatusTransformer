@@ -110,6 +110,7 @@ PageStatusTransformer.newInstance(replaceTo = ...) {
 
 ## 与其他方案对比
 目前项目中使用的API都是类似于 `showLoading(@resId int id, String text)` ,但新一期需求设计出的loading提示/空数据提示/网络异常提示都是复杂的动画。以前的接口完全不能满足，而且对`BaseFragment`改动很大。一个本来很小的需求，就影响到接口设计，所以干脆重做了状态切换这一块。
+所以千万不要把这些状态切换代码塞到 `BaseFragment` 中，千万不要把ui下沉，千万不要二次封装。
 
 ## 对Java支持
 通过`JavaViewStatusBuilder`来把弱鸡Java适配到Kotlin DSL：
