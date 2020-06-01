@@ -7,6 +7,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 
@@ -174,6 +175,7 @@ class PageStatusTransformer private constructor() {
                     newParent.addView(contentView, MATCH_PARENT, MATCH_PARENT)
                     newParent.setTag(tagKey, "Make from PageStatusTransformer")
                     resolveConstraintLayoutId(grandParent, contentView, newParent)
+                    resolveCoordinatorLayoutDependency(grandParent)
                     return newParent
                 }
                 else -> {
@@ -208,6 +210,20 @@ class PageStatusTransformer private constructor() {
                         if (lp.circleConstraint == oldId) lp.circleConstraint = newId
                     }
                 }
+            }
+        }
+
+        /**
+         * CoordinatorLayout会在onMeasure的时候建立一条子View的依赖链：
+         * [CoordinatorLayout.mDependencySortedChildren]。
+         * 这条链如果不及时更新就会出现里面的View已经不再是子View，从而导致ClassCastException。
+         */
+        private fun resolveCoordinatorLayoutDependency(coordinatorLayout: ViewGroup) {
+            if (coordinatorLayout is CoordinatorLayout) {
+                coordinatorLayout.measure(
+                    coordinatorLayout.measuredWidthAndState,
+                    coordinatorLayout.measuredHeightAndState
+                )
             }
         }
     }
