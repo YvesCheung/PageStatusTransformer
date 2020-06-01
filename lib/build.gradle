@@ -20,6 +20,15 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            java {
+                include '**/*.java'
+                include '**/*.kt'
+            }
+        }
+    }
+
     compileOptions {
         kotlinOptions.freeCompilerArgs += ['-module-name', "${group}.PageStatusTransformer"]
     }
