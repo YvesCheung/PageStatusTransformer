@@ -15,9 +15,9 @@ import android.view.ViewGroup
  */
 abstract class ReplacementViewStatus : PageDisplayStatus {
 
-    internal open var parent: ViewGroup? = null
+    open var parent: ViewGroup? = null
 
-    internal open var child: View? = null
+    open var child: View? = null
 
     abstract fun inflateView(inflater: LayoutInflater, parent: ViewGroup): View
 
