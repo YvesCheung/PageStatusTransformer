@@ -140,6 +140,6 @@ allprojects {
 ```
 ```
 dependencies {
-    implementation 'com.github.YvesCheung:PageStatusTransformer:1.0.0'
+    implementation 'com.github.YvesCheung:PageStatusTransformer:1.0.3'
 }
 ```
