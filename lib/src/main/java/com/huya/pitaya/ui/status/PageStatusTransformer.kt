@@ -200,11 +200,15 @@ class PageStatusTransformer private constructor() {
                     if (lp is ConstraintLayout.LayoutParams) {
                         if (lp.baselineToBaseline == oldId) lp.baselineToBaseline = newId
                         if (lp.leftToLeft == oldId) lp.leftToLeft = newId
+                        if (lp.startToStart == oldId) lp.startToStart = newId
                         if (lp.leftToRight == oldId) lp.leftToRight = newId
+                        if (lp.startToEnd == oldId) lp.startToEnd = newId
                         if (lp.topToTop == oldId) lp.topToTop = newId
                         if (lp.topToBottom == oldId) lp.topToBottom = newId
                         if (lp.rightToRight == oldId) lp.rightToRight = newId
+                        if (lp.endToEnd == oldId) lp.endToEnd = newId
                         if (lp.rightToLeft == oldId) lp.rightToLeft = newId
+                        if (lp.endToStart == oldId) lp.endToStart = newId
                         if (lp.bottomToBottom == oldId) lp.bottomToBottom = newId
                         if (lp.bottomToTop == oldId) lp.bottomToTop = newId
                         if (lp.circleConstraint == oldId) lp.circleConstraint = newId
