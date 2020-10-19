@@ -4,7 +4,7 @@
 
 ![Preview](https://github.com/YvesCheung/PageStatusTransformer/blob/master/art/PageStatusTransformer.gif?raw=true)
 
-[中文](https://github.com/YvesCheung/PageStatusTransformer/blob/master/README_CN.md)
+[中文版](https://github.com/YvesCheung/PageStatusTransformer/blob/master/README_CN.md)
 
 ## Feature
 
@@ -47,11 +47,11 @@ PageStatusTransformer.newInstance(
     State2 {...}
 }
 ```
-The 'view' of the original page can be specified by the optional parameter 'replaceTo'. 
-When a transform occurs, the 'view' in the new state will dynamically replace the 'view' in the old state.
+The `view` of the original page can be specified by the optional parameter `replaceTo`. 
+When a transform occurs, the `view` in the new state will dynamically replace the `view` in the old state.
 
-Therefore, there is no need to put a so-called '<StatusLayout />' in XML, and it is not necessary to 
-plug the business into 'BaseActivity' or 'BaseFragment'.
+Therefore, there is no need to put a so-called `<StatusLayout />` in XML, and it is not necessary to 
+plug the business into `BaseActivity` or `BaseFragment`.
 
 - Different ways to toggle the visibility of View
 ```kotlin
