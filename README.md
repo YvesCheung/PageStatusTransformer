@@ -121,7 +121,7 @@ PageStatusTransformer transformer = PageStatusTransformer.newInstance(mRecyclerV
 transformer.transform("Empty");
 ```
 
-## 安装
+## Install
 [![](https://jitpack.io/v/YvesCheung/PageStatusTransformer.svg)](https://jitpack.io/#YvesCheung/PageStatusTransformer)
 ```groovy
 allprojects {
