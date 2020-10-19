@@ -17,8 +17,11 @@ import androidx.annotation.MainThread
 interface PageDisplayStatus {
 
     @MainThread
-    fun showView()
+    fun showView(param: Map<String, Any>) = showView()
 
     @MainThread
-    fun hideView()
+    fun showView() {}
+
+    @MainThread
+    fun hideView() {}
 }

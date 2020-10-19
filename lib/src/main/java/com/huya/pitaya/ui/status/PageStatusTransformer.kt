@@ -235,9 +235,11 @@ class PageStatusTransformer private constructor() {
     /**
      * 当前显示的状态，通过[transform]切换
      */
+    val currentStatusName: String?
+        get() = currentStatusAndParam?.first
+
     @Volatile
-    var currentStatusName: String? = null
-        private set
+    private var currentStatusAndParam: Pair<String, Map<String, Any>>? = null
 
     /**
      * 控制当前状态的可见性。
@@ -253,7 +255,7 @@ class PageStatusTransformer private constructor() {
             if (field != visible) {
                 field = visible
                 if (visible) {
-                    currentStatusName?.let { status -> transform(status) }
+                    currentStatusAndParam?.let { (status, param) -> transform(status, param) }
                 } else {
                     statusList.values.forEach { status -> status.hideView() }
                 }
@@ -265,15 +267,17 @@ class PageStatusTransformer private constructor() {
      * @param status 在[ViewStatusBuilder]中定义的状态
      */
     @MainThread
-    fun transform(status: Enum<*>) = transform(status.name)
+    @JvmOverloads
+    fun transform(status: Enum<*>, param: Map<String, Any> = emptyMap()) =
+        transform(status.name, param)
 
     /**
      * 切换状态
      * @param status 在[ViewStatusBuilder]中定义的状态
      */
     @MainThread
-    fun transform(status: String) {
-        currentStatusName = status
+    @JvmOverloads
+    fun transform(status: String, param: Map<String, Any> = emptyMap()) {
         if (visibility) {
             val currentStatus = statusList[status]
             when {
@@ -287,12 +291,16 @@ class PageStatusTransformer private constructor() {
                     throw IllegalThreadStateException("Only the mainThread can transform the ui status")
                 }
                 else -> {
+                    currentStatusAndParam = status to param
+
                     statusList.filter { it.key != status }.forEach { (_, status) ->
                         status.hideView()
                     }
-                    currentStatus.showView()
+                    currentStatus.showView(param)
                 }
             }
+        } else {
+            currentStatusAndParam = status to param
         }
     }
 }

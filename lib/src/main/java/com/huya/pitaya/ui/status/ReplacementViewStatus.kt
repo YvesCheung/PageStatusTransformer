@@ -27,6 +27,10 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
     }
 
     final override fun showView() {
+        //No Access
+    }
+
+    final override fun showView(param: Map<String, Any>) {
         val view = getOrCreateChild()
         val originParent = view.parent
         if (originParent == parent) {
@@ -39,12 +43,14 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
             }
         }
         parent!!.addView(view)
-        onViewShow(view)
+        onViewShow(view, param)
     }
 
     /**
      * 子类覆写[onViewShow]而不是[showView]，为的是[ReplacementViewStatusDecoration]能正常嵌套代理
      */
+    open fun onViewShow(view: View, param: Map<String, Any>) = onViewShow(view)
+
     open fun onViewShow(view: View) {}
 
     final override fun hideView() {

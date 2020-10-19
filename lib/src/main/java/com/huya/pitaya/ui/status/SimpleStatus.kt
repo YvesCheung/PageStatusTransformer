@@ -8,6 +8,7 @@ import android.view.View
  * @author YvesCheung
  * 2020/4/17
  */
+@Suppress("MemberVisibilityCanBePrivate")
 open class SimpleStatus(protected val view: View?) : PageDisplayStatus {
 
     override fun showView() {
