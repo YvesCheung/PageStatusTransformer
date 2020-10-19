@@ -4,6 +4,17 @@ package com.huya.pitaya.ui.status
  * 没有什么实际意义，主要是为了兼容Java的语言和Kotlin的DSL
  * 使得[PageStatusTransformer.ViewStatusBuilder]的方法调用在Java里面不会太恶心
  *
+ * Mainly for compatibility with Java language and Kotlin DSL.
+ *
+ * ```Java
+ * mStatusManager = PageStatusTransformer.newInstance(mRecyclerView, new JavaViewStatusBuilder()
+ *      .putStatus("Empty", YourStatus.empty(getString(R.string.empty_list)))
+ *      .putStatus("NetError", YourStatus.netError())
+ *      .putStatus("Loading", YourStatus.loading())
+ *      .putStatus("Normal", new SimpleStatus(mRecyclerView))
+ *      .build());
+ * ```
+ *
  * @author YvesCheung
  * 2020/3/26
  */

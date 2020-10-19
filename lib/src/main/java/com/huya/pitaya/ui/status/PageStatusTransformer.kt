@@ -13,40 +13,63 @@ import androidx.core.view.children
 
 /**
  * # 页面状态切换
- * - 定义状态，返回状态要显示的视图
+ * 1. 定义状态，返回状态要显示的视图
+ * 2. 切换状态
+ *
+ * # Page status transform
+ *
+ * 1. Define the status, declare the view of the status
+ *
  * ```Kotlin
  * val status = PageStatusTransformer.newInstance {
- *    "状态1" {
+ *    "Status 1" {
  *      ViewStatus(view_for_status_1)
  *    }
- *    "状态2" {
+ *    "Status 2" {
  *      ViewStatus(view_for_status_2)
  *    }
- *    "状态3" {
+ *    "Status 3" {
  *      ViewStatus(view_for_status_3)
  *    }
  * }
  * ```
  *
- * - 切换状态
+ * 2. Transform the status
+ *
  * ```Kotlin
- * status.transform("状态3")
+ * status.transform("Status 3")
  * ```
  *
  * # 页面的状态
+ *
  * - 每一种状态对应一个[PageDisplayStatus]，切换状态意味着：
  *     - 当前状态调用 [PageDisplayStatus.showView]
  *     - 其他非当前状态调用 [PageDisplayStatus.hideView]
  *
  * - 状态可以通过[String]或者[Enum]来命名
  *     - 通过[newInstance]静态工厂构造时需要为所有可能使用的状态进行命名和定义。
- *     通过[ViewStatusBuilder.invoke]方法会把这些状态记录到状态机中。
+ *     - 通过[ViewStatusBuilder.invoke]方法会把这些状态记录到状态机中。
+ *
+ * # PageDisplayStatus
+ * - Each state corresponds to a [PageDisplayStatus], which means that:
+ *     - current state's [PageDisplayStatus.showView] is invoked.
+ *     - other states's [PageDisplayStatus.hideView] are invoked.
+ *
+ * - The state is named by [String] or [Enum]
+ *     - All possible states need to be named and defined through the [newInstance] static factory method.
+ *     - The [ViewStatusBuilder.invoke] method will record these states to the state machine.
  *
  * # 状态的可见性
  * - 通常只有命名为[currentStatusName]的当前状态是可见的，
  * 其余所有状态都会因为[PageDisplayStatus.hideView]被调用而不可见；
  * - 也可以通过设置[visibility]为 `false` 让所有状态（包括[currentStatusName]）变得不可见，
  * 设置为`true`可以让当前状态恢复可见。
+ *
+ * # Visibility of States
+ * - Usually, only the status named [currentStatusName] is visible.
+ *   All other states will call [PageDisplayStatus.hideView];
+ * - You can also make all States (including [currentStatusName]) invisible by setting [visibility] to 'false',
+ *   Set to 'true' to make the [currentStatusName] visible.
  *
  * @see SimpleStatus
  * @see ViewStubStatus
@@ -83,21 +106,25 @@ class PageStatusTransformer private constructor() {
     private val statusList = mutableMapOf<String, PageDisplayStatus>()
 
     /**
-     * 状态的构造，可以通过:
+     * Construct your page status:
+     *
      * ```kotlin
      * "yourStatusName" {
      *      PageDisplayStatus()
      * }
      * ```
-     * 或者
+     *
+     * or
+     *
      * ```
      * YourStatusEnum {
      *      PageDisplayStatus()
      * }
-     * 来定义状态机中包含的所有状态
      * ```
      *
      * 在Java中使用[JavaViewStatusBuilder]来适配这个DSL
+     *
+     * Use [JavaViewStatusBuilder] in Java.
      */
     open inner class ViewStatusBuilder internal constructor() {
 
@@ -120,21 +147,25 @@ class PageStatusTransformer private constructor() {
     }
 
     /**
-     * 状态的构造，可以通过:
+     * Construct your page status:
+     *
      * ```kotlin
      * "yourStatusName" {
      *      PageDisplayStatus()
      * }
      * ```
-     * 或者
+     *
+     * or
+     *
      * ```
      * YourStatusEnum {
      *      PageDisplayStatus()
      * }
-     * 来定义状态机中包含的所有状态
      * ```
      *
      * 在Java中使用[JavaViewStatusBuilder]来适配这个DSL
+     *
+     * Use [JavaViewStatusBuilder] in Java.
      */
     open inner class ReplacementViewStatusBuilder internal constructor(
         /**
@@ -190,6 +221,8 @@ class PageStatusTransformer private constructor() {
         /**
          * ConstraintLayout会依赖原来的View的id（比如layout_constraintBottom_toBottomOf="旧id"），
          * 需要把旧id全部替换为新id。
+         *
+         * Workaround for [ConstraintLayout].
          */
         private fun resolveConstraintLayoutId(constraintLayout: ViewGroup, old: View, new: View) {
             val oldId = old.id
@@ -221,6 +254,8 @@ class PageStatusTransformer private constructor() {
          * CoordinatorLayout会在onMeasure的时候建立一条子View的依赖链：
          * [CoordinatorLayout.mDependencySortedChildren]。
          * 这条链如果不及时更新就会出现里面的View已经不再是子View，从而导致ClassCastException。
+         *
+         * Workaround for [CoordinatorLayout].
          */
         private fun resolveCoordinatorLayoutDependency(coordinatorLayout: ViewGroup) {
             if (coordinatorLayout is CoordinatorLayout) {
@@ -234,6 +269,8 @@ class PageStatusTransformer private constructor() {
 
     /**
      * 当前显示的状态，通过[transform]切换
+     *
+     * The current display status switched through [transform].
      */
     val currentStatusName: String?
         get() = currentStatusAndParam?.first
@@ -245,6 +282,13 @@ class PageStatusTransformer private constructor() {
      * 控制当前状态的可见性。
      * 该方法不影响通过[transform]切换状态，即使[visibility]为false，依然可以切换状态，但是状态不可见。
      * 当[visibility]切换为true时，[currentStatusName]代表的状态就会显示。
+     *
+     * Toggles the visibility of the current state.
+     *
+     * This method does not affect the state switching through [transform].
+     * Even if [visibility] is false, the state can still be transformed, but the UI is invisible.
+     *
+     * When [visibility] is set to true, the status represented by [currentStatusName] will be displayed.
      */
     var visibility: Boolean = true
         @MainThread
@@ -264,7 +308,10 @@ class PageStatusTransformer private constructor() {
 
     /**
      * 切换状态
-     * @param status 在[ViewStatusBuilder]中定义的状态
+     *
+     * Transform status.
+     *
+     * @param status status defined in [ViewStatusBuilder]
      */
     @MainThread
     @JvmOverloads
@@ -273,7 +320,10 @@ class PageStatusTransformer private constructor() {
 
     /**
      * 切换状态
-     * @param status 在[ViewStatusBuilder]中定义的状态
+     *
+     * Transform status.
+     *
+     * @param status status defined in [ViewStatusBuilder]
      */
     @MainThread
     @JvmOverloads

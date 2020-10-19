@@ -6,6 +6,8 @@ import android.view.ViewStub
 /**
  * 状态切换时会触发 [ViewStub] 的渲染。
  *
+ * The rendering of [ViewStub] would be triggered when the state is switched.
+ *
  * @author YvesCheung
  * 2020/4/17
  */

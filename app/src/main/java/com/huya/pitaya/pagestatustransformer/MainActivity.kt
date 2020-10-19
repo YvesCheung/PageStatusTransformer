@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import androidx.core.view.updateLayoutParams
 import com.huya.pitaya.ui.status.PageStatusTransformer
 import com.huya.pitaya.ui.status.ReplacementViewStatus
 import com.huya.pitaya.ui.status.ReplacementViewStatusDecoration
@@ -34,23 +32,23 @@ class MainActivity : AppCompatActivity() {
             val transformer =
                 PageStatusTransformer.newInstance(replaceTo = view) {
 
-                    DemoStatus.普通状态 {
+                    DemoStatus.Normal {
                         SimpleStatus(contentView)
                     }
 
-                    DemoStatus.加载中 {
+                    DemoStatus.Loading {
                         MyLoadingPageStatus("$name Loading...")
                     }
 
-                    DemoStatus.没有数据 {
+                    DemoStatus.NothingHappen {
                         MyEmptyPageStatus("$name Empty？")
                     }
 
-                    DemoStatus.数据错误 {
+                    DemoStatus.EncounterAnError {
                         MyErrorPageStatus("$name Error!")
                     }
 
-                    DemoStatus.特别严重的错误 {
+                    DemoStatus.EncounterVeryBigError {
                         BigLogoDecoration(MyErrorPageStatus("$name Big Error!!!"))
                     }
                 }
@@ -98,17 +96,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("NonAsciiCharacters", "EnumEntryName")
     enum class DemoStatus {
-        普通状态,
+        Normal,
 
-        加载中,
+        Loading,
 
-        没有数据,
+        NothingHappen,
 
-        数据错误,
+        EncounterAnError,
 
-        特别严重的错误
+        EncounterVeryBigError
     }
 
     var currentState = 0

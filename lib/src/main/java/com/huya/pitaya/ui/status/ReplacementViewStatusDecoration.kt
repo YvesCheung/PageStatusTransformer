@@ -7,13 +7,18 @@ import android.view.ViewGroup
 /**
  * 装饰器模式，对[status]中的属性进行修改或增强。
  *
- * 比如有三种不同的ui特性：
+ * Decorator pattern to modify or enhance ability in [status].
+ *
+ * If we have 3 different features:
+ *
  * ```kotlin
  * class Feature1Decorate(status: ReplacementViewStatus)：ReplacementViewStatusDecoration
  * class Feature2Decorate(status: ReplacementViewStatus)：ReplacementViewStatusDecoration
  * class Feature3Decorate(status: ReplacementViewStatus)：ReplacementViewStatusDecoration
  * ```
- * 通过装饰器嵌套的方式来组合这些ui的特性：
+ *
+ * We can combine these features by nesting decoration:
+ *
  * ```kotlin
  * val viewStatus: PageDisplayStatus =
  *      Feature1Decorate(

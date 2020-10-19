@@ -10,6 +10,14 @@ import android.view.ViewGroup
  *
  * 可重用的ui的修改，通过[ReplacementViewStatusDecoration]装饰器嵌套来实现，而不是继承。
  *
+ * When the state is switched, the [View] in the original hierarchy will be replaced by a new [inflateView],
+ * which has the same size and same parent.
+ *
+ * The substituted [View] is replaced by the `replaceTo` parameter set in [PageStatusTransformer.newInstance].
+ *
+ * The modification of reusable UI is implemented by nesting the [ReplacementViewStatusDecoration] decorator
+ * rather than by inheritance.
+ *
  * @author YvesCheung
  * 2020/4/17
  */
@@ -48,6 +56,9 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
 
     /**
      * 子类覆写[onViewShow]而不是[showView]，为的是[ReplacementViewStatusDecoration]能正常嵌套代理
+     *
+     * Subclasses must override [onViewShow] instead of [showView]
+     * so that [ReplacementViewStatusDecoration] can work properly.
      */
     open fun onViewShow(view: View, param: Map<String, Any>) = onViewShow(view)
 
@@ -63,6 +74,9 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
 
     /**
      * 子类覆写[onViewHide]而不是[hideView]，为的是[ReplacementViewStatusDecoration]能正常嵌套代理
+     *
+     * Subclasses must override [onViewHide] instead of [hideView]
+     * so that [ReplacementViewStatusDecoration] can work properly.
      */
     open fun onViewHide(view: View) {}
 }
