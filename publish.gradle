@@ -99,7 +99,6 @@ bintray {
     pkg {
         repo = bintrayRepo
         name = bintrayName
-        userOrg = properties.getProperty("bintray.org")
         desc = libraryDescription
         websiteUrl = siteUrl
         vcsUrl = gitUrl
