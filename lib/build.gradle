@@ -1,7 +1,25 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-group = 'com.github.YvesCheung'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'PageStatusTransformer'
+
+    libraryGroupId = 'com.huya.pitaya'
+    libraryName = 'PageStatusTransformer'
+
+    libraryDescription = 'A low invasive state management on Android'
+
+    siteUrl = 'https://github.com/YvesCheung/PageStatusTransformer'
+    gitUrl = 'https://github.com/YvesCheung/PageStatusTransformer.git'
+
+    libraryVersion = '1.0.5'
+
+    developerId = 'YvesCheung'
+    developerName = 'YvesCheung'
+    developerEmail = '975135274@qq.com'
+}
 
 android {
     compileSdkVersion 28
@@ -47,26 +65,4 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-// 打包源码
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    failOnError false
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    classpath += configurations.compile
-}
-
-// 制作文档(Javadoc)
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+apply from: "../publish.gradle"
