@@ -125,17 +125,9 @@ transformer.transform("Empty");
 ```
 
 ## Install
-[![](https://jitpack.io/v/YvesCheung/PageStatusTransformer.svg)](https://jitpack.io/#YvesCheung/PageStatusTransformer)
-```groovy
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
 ```
 dependencies {
-    implementation 'com.github.YvesCheung:PageStatusTransformer:1.0.3'
+    implementation 'com.huya.pitaya:PageStatusTransformer:x.y.z'
 }
 ```
+version replace with [![bintray](https://api.bintray.com/packages/yvescheung/maven/PageStatusTransformer/images/download.svg) ](https://bintray.com/yvescheung/maven/PageStatusTransformer/_latestVersion)
