@@ -1,5 +1,8 @@
 # PageStatusTransformer
 
+[![bintray](https://api.bintray.com/packages/yvescheung/maven/PageStatusTransformer/images/download.svg) ](https://bintray.com/yvescheung/maven/PageStatusTransformer/_latestVersion)
+[![jitpack](https://jitpack.io/v/YvesCheung/PageStatusTransformer.svg)](https://jitpack.io/#YvesCheung/PageStatusTransformer)
+
 > A low invasive state management on Android
 
 ![Preview](https://github.com/YvesCheung/PageStatusTransformer/blob/master/art/PageStatusTransformer.gif?raw=true)
