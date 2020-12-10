@@ -23,15 +23,17 @@ import android.view.ViewGroup
  */
 abstract class ReplacementViewStatus : PageDisplayStatus {
 
-    open var parent: ViewGroup? = null
+    open var parent: ParentInfo? = null
+        internal set
 
     open var child: View? = null
 
     abstract fun inflateView(inflater: LayoutInflater, parent: ViewGroup): View
 
     private fun getOrCreateChild(): View {
+        val parentView = parent!!.view
         return child
-            ?: inflateView(LayoutInflater.from(parent!!.context), parent!!).also { child = it }
+            ?: inflateView(LayoutInflater.from(parentView.context), parentView).also { child = it }
     }
 
     final override fun showView() {
@@ -39,9 +41,10 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
     }
 
     final override fun showView(param: Map<String, Any>) {
+        val p = parent!!
         val view = getOrCreateChild()
         val originParent = view.parent
-        if (originParent == parent) {
+        if (originParent == p.view) {
             return
         } else if (originParent != null) {
             if (originParent is ViewGroup) {
@@ -50,7 +53,7 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
                 throw IllegalStateException("Why $view has a parent $originParent?")
             }
         }
-        parent!!.addView(view)
+        p.view.addView(view, p.insertIndex)
         onViewShow(view, param)
     }
 
@@ -65,9 +68,10 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
     open fun onViewShow(view: View) {}
 
     final override fun hideView() {
+        val p = parent!!
         val view = child
         if (view != null) {
-            parent!!.removeView(view)
+            p.view.removeView(view)
             onViewHide(view)
         }
     }

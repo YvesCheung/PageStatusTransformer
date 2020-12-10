@@ -184,31 +184,39 @@ class PageStatusTransformer private constructor() {
             }
         }
 
-        private fun replaceParent(contentView: View): ViewGroup {
+        private fun replaceParent(contentView: View): ParentInfo {
             if (contentView is ViewGroup && contentView.getTag(tagKey) != null) {
-                return contentView
+                return ParentInfo(contentView)
             }
-            val grandParent = contentView.parent
-            if (grandParent is ViewGroup) {
-                if (grandParent.getTag(tagKey) != null) {
-                    return grandParent
+            when (val grandParent = contentView.parent) {
+                is FrameLayout -> {
+                    grandParent.setTag(tagKey, "Make from PageStatusTransformer")
+                    //add to the next position of $contentView
+                    val index = grandParent.indexOfChild(contentView) + 1
+                    return ParentInfo(grandParent, index)
                 }
-                val index = grandParent.indexOfChild(contentView)
-                val contentParam = contentView.layoutParams
-                grandParent.removeView(contentView)
-                val newParent = FrameLayout(grandParent.context)
-                newParent.id = ViewCompat.generateViewId()
-                grandParent.addView(newParent, index, contentParam)
-                newParent.addView(contentView, MATCH_PARENT, MATCH_PARENT)
-                newParent.setTag(tagKey, "Make from PageStatusTransformer")
-                resolveConstraintLayoutId(grandParent, contentView, newParent)
-                resolveCoordinatorLayoutDependency(grandParent)
-                return newParent
-            } else {
-                throw IllegalStateException(
-                    "$contentView must have a parent. " +
-                            "Current parent is $grandParent"
-                )
+                is ViewGroup -> {
+                    if (grandParent.getTag(tagKey) != null) {
+                        return ParentInfo(grandParent)
+                    }
+                    val index = grandParent.indexOfChild(contentView)
+                    val contentParam = contentView.layoutParams
+                    grandParent.removeView(contentView)
+                    val newParent = FrameLayout(grandParent.context)
+                    newParent.id = ViewCompat.generateViewId()
+                    grandParent.addView(newParent, index, contentParam)
+                    newParent.addView(contentView, MATCH_PARENT, MATCH_PARENT)
+                    newParent.setTag(tagKey, "Make from PageStatusTransformer")
+                    resolveConstraintLayoutId(grandParent, contentView, newParent)
+                    resolveCoordinatorLayoutDependency(grandParent)
+                    return ParentInfo(newParent)
+                }
+                else -> {
+                    throw IllegalStateException(
+                        "$contentView must have a parent. " +
+                                "Current parent is $grandParent"
+                    )
+                }
             }
         }
 

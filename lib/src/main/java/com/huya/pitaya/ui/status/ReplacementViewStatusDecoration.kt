@@ -35,7 +35,7 @@ abstract class ReplacementViewStatusDecoration(
     protected val status: ReplacementViewStatus
 ) : ReplacementViewStatus() {
 
-    override var parent: ViewGroup?
+    override var parent: ParentInfo?
         get() = status.parent
         set(value) {
             status.parent = value
