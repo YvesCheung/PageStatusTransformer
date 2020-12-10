@@ -53,7 +53,9 @@ abstract class ReplacementViewStatus : PageDisplayStatus {
                 throw IllegalStateException("Why $view has a parent $originParent?")
             }
         }
-        p.view.addView(view, p.insertIndex)
+        val index = if (p.insertIndex <= p.view.childCount) p.insertIndex else -1
+        p.view.addView(view, index)
+
         onViewShow(view, param)
     }
 
