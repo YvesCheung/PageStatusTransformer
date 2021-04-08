@@ -10,6 +10,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.Lifecycle.State.DESTROYED
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
+import com.huya.pitaya.ui.status.PageStatusTransformer.Companion.newInstance
 
 /**
  * # 页面状态切换
@@ -71,6 +78,10 @@ import androidx.core.view.children
  * - You can also make all States (including [currentStatusName]) invisible by setting [visibility] to 'false',
  *   Set to 'true' to make the [currentStatusName] visible.
  *
+ * # 绑定生命周期
+ * 可选地，可以在[newInstance]构造时传入[LifecycleOwner]，当[Event.ON_DESTROY]时销毁状态所持有的[View]。
+ * 注意传入的是[Fragment.getViewLifecycleOwner]而不是[Fragment.getLifecycle]。
+ *
  * @see SimpleStatus
  * @see ViewStubStatus
  * @see ReplacementViewStatus
@@ -78,29 +89,13 @@ import androidx.core.view.children
  * @author YvesCheung
  * 2020/3/21
  */
-@Suppress("MemberVisibilityCanBePrivate")
-class PageStatusTransformer private constructor() {
+@Suppress("MemberVisibilityCanBePrivate", "unused")
+class PageStatusTransformer private constructor(
+    private val lifecycleOwner: LifecycleOwner? = null
+) : LifecycleObserver {
 
-    companion object {
-
-        //static factory
-        @JvmStatic
-        fun newInstance(config: ViewStatusBuilder.() -> Unit): PageStatusTransformer {
-            val instance = PageStatusTransformer()
-            config(instance.ViewStatusBuilder())
-            return instance
-        }
-
-        //static factory
-        @JvmStatic
-        fun newInstance(
-            replaceTo: View,
-            config: ReplacementViewStatusBuilder.() -> Unit
-        ): PageStatusTransformer {
-            val instance = PageStatusTransformer()
-            config(instance.ReplacementViewStatusBuilder(replaceTo))
-            return instance
-        }
+    init {
+        lifecycleOwner?.lifecycle?.addObserver(this)
     }
 
     private val statusList = mutableMapOf<String, PageDisplayStatus>()
@@ -300,6 +295,12 @@ class PageStatusTransformer private constructor() {
             }
             if (field != visible) {
                 field = visible
+
+                if (lifecycleOwner?.lifecycle?.currentState == DESTROYED) {
+                    //Can't perform this state after ON_DESTROY
+                    return
+                }
+
                 if (visible) {
                     currentStatusAndParam?.let { (status, param) -> transform(status, param) }
                 } else {
@@ -330,6 +331,11 @@ class PageStatusTransformer private constructor() {
     @MainThread
     @JvmOverloads
     fun transform(status: String, param: Map<String, Any> = emptyMap()) {
+        if (lifecycleOwner?.lifecycle?.currentState == DESTROYED) {
+            //Can't perform this state after ON_DESTROY
+            return
+        }
+
         if (visibility) {
             val currentStatus = statusList[status]
             when {
@@ -353,6 +359,50 @@ class PageStatusTransformer private constructor() {
             }
         } else {
             currentStatusAndParam = status to param
+        }
+    }
+
+    @MainThread
+    @OnLifecycleEvent(ON_DESTROY)
+    fun destroyView() {
+        statusList.clear()
+    }
+
+    companion object {
+
+        //static factory
+        @JvmStatic
+        @JvmOverloads
+        fun newInstance(
+            lifecycleOwner: LifecycleOwner? = null,
+            config: ViewStatusBuilder.() -> Unit
+        ): PageStatusTransformer {
+            val instance = PageStatusTransformer(lifecycleOwner)
+            config(instance.ViewStatusBuilder())
+            return instance
+        }
+
+        //static factory
+        @JvmStatic
+        fun newInstance(
+            lifecycleOwner: LifecycleOwner? = null,
+            replaceTo: View,
+            config: ReplacementViewStatusBuilder.() -> Unit
+        ): PageStatusTransformer {
+            val instance = PageStatusTransformer(lifecycleOwner)
+            config(instance.ReplacementViewStatusBuilder(replaceTo))
+            return instance
+        }
+
+        //static factory
+        @JvmStatic
+        fun newInstance(
+            replaceTo: View,
+            config: ReplacementViewStatusBuilder.() -> Unit
+        ): PageStatusTransformer {
+            val instance = PageStatusTransformer()
+            config(instance.ReplacementViewStatusBuilder(replaceTo))
+            return instance
         }
     }
 }
