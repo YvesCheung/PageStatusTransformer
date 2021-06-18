@@ -131,9 +131,12 @@ transformer.transform("Empty");
 ## 安装
 
 ```
-//jcenter
+repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+}
 dependencies {
-    implementation 'com.huya.pitaya:PageStatusTransformer:x.y.z'
+    implementation 'com.github.YvesCheung:PageStatusTransformer:x.y.z'
 }
 ```
-version replace with [![bintray](https://api.bintray.com/packages/yvescheung/maven/PageStatusTransformer/images/download.svg) ](https://bintray.com/yvescheung/maven/PageStatusTransformer/_latestVersion)
+version replace with [![jitpack](https://jitpack.io/v/YvesCheung/PageStatusTransformer.svg)](https://jitpack.io/#YvesCheung/PageStatusTransformer)
