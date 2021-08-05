@@ -50,9 +50,10 @@ abstract class ReplacementViewStatusDecoration(
     override fun inflateView(inflater: LayoutInflater, parent: ViewGroup): View =
         status.inflateView(inflater, parent)
 
-    override fun onViewShow(view: View, param: Map<String, Any>) = status.onViewShow(view, param)
-
-    override fun onViewShow(view: View) = status.onViewShow(view)
+    override fun onViewShow(view: View, param: Map<String, Any>) {
+        status.onViewShow(view, param)
+        onViewShow(view)
+    }
 
     override fun onViewHide(view: View) = status.onViewHide(view)
 }
