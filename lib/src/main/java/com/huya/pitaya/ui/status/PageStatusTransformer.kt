@@ -183,14 +183,15 @@ class PageStatusTransformer private constructor(
             if (contentView is ViewGroup && contentView.getTag(tagKey) != null) {
                 return ParentInfo(contentView)
             }
-            when (val grandParent = contentView.parent) {
-                is FrameLayout -> {
+            val grandParent = contentView.parent
+            when {
+                grandParent is FrameLayout && grandParent::class.java == FrameLayout::class.java -> {
                     grandParent.setTag(tagKey, "Make from PageStatusTransformer")
                     //add to the next position of $contentView
                     val index = grandParent.indexOfChild(contentView) + 1
                     return ParentInfo(grandParent, index)
                 }
-                is ViewGroup -> {
+                grandParent is ViewGroup -> {
                     if (grandParent.getTag(tagKey) != null) {
                         return ParentInfo(grandParent)
                     }
