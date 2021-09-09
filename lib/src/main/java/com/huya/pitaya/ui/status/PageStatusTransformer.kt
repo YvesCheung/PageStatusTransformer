@@ -185,6 +185,10 @@ class PageStatusTransformer private constructor(
             }
             val grandParent = contentView.parent
             when {
+                contentView is FrameLayout && contentView::class.java == FrameLayout::class.java -> {
+                    contentView.setTag(tagKey, "Make from PageStatusTransformer")
+                    return ParentInfo(contentView)
+                }
                 grandParent is FrameLayout && grandParent::class.java == FrameLayout::class.java -> {
                     grandParent.setTag(tagKey, "Make from PageStatusTransformer")
                     //add to the next position of $contentView
