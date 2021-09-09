@@ -48,6 +48,27 @@ class Issue1Activity : AppCompatActivity() {
         recycler_view.postDelayed({
             status.transform("Data arrive")
         }, 1000L)
+
+        val scrollViewStatus = PageStatusTransformer.newInstance(this, tv_title) {
+            "A"{
+                object : ReplacementViewStatus() {
+                    override fun inflateView(
+                        inflater: LayoutInflater,
+                        parent: ViewGroup
+                    ): View {
+                        return ProgressBar(parent.context)
+                    }
+                }
+            }
+            "B"{
+                SimpleStatus(contentView)
+            }
+        }
+        scrollViewStatus.transform("A")
+
+        tv_title.postDelayed({
+            scrollViewStatus.transform("B")
+        }, 1000L)
     }
 
     private class A(val data: List<String>) : RecyclerView.Adapter<H>() {
